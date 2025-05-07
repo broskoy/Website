@@ -1,11 +1,11 @@
-var canvas = document.getElementById('clock');
+var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 
 let sq = Math.min(window.innerWidth, window.innerHeight);
 canvas.width = sq;
 canvas.height = sq;
 
-let clock = document.getElementById('reference');
+let clock = document.getElementById('clock');
 clock.style.top = sq / 2 - clock.clientHeight + 'px';
 clock.style.left = canvas.getBoundingClientRect().left + 'px';
 clock.style.width = canvas.getBoundingClientRect().top + sq + 'px';
@@ -122,7 +122,7 @@ function currentTime() {
    ss = (ss < 10) ? "0" + ss : ss;
     
    let t = hh + ":" + mm + ":" + ss + " ";
-   document.getElementById("reference").innerText = t; 
+   document.getElementById("clock").innerText = t; 
   
   return (hh << 12) + (mm << 6) + ss;
 }

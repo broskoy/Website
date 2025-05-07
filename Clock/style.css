@@ -1,10 +1,10 @@
 body {
     text-align: center;
-    background-color: black;
+    background-color: #222;
     color: white;
 }
 
-#reference {
+#clock {
     position: absolute;
     font-family: monospace;
     font-size: 32pt;

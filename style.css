@@ -5,47 +5,60 @@ body
 }
 
 
-h1 
+.welcome
 {
-    /* position: absolute; */
+    margin-top: 3%;
     font-family: monospace;
     color: #FFF;
     text-align: center;
-    font-size: 32pt;
+    font-size: 36pt;
 }
 
-p 
+
+.explanation
 {
     font-family: monospace;
     color: #AAA;
     text-align: center;
+    font-size: 12pt;
 }
+
 
 .grid-container
 {
-    width: 80%;
-    height: 40%;
-    margin: 0;
+    width: 90%;
+    height: 60%;
+    margin: 4%;
     display: grid;
     column-gap: 10%;
     row-gap: 10%;
     grid-template-columns: auto auto;
-    background-color: #267;
+    /* background-color: #267; */
     padding: 10px;
 }
 
+
 .link-container
 {
-    
-    width: 20%;
-    height: 5%;
-    background-color: #523;
+    background: rgba(110, 0, 0, 0.592);
+    display: grid;
+    align-items: center; 
+    grid-template-columns: 1fr 1fr 1fr;
+    font-family: monospace;
+    color: #AAA;    
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
 }
 
-a
+.title
 {
-    margin:auto;
+    float: right;
+    width:20%;
     font-family: monospace;
-    color: #AAA;
-    text-align: center;
+}
+
+
+.image
+{
+    background: rgba(101, 110, 0, 0.592);
+    width: 80%;     
 }
