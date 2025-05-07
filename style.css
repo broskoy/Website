@@ -1,0 +1,51 @@
+body 
+{
+    background-color: #222;
+    color: white;
+}
+
+
+h1 
+{
+    /* position: absolute; */
+    font-family: monospace;
+    color: #FFF;
+    text-align: center;
+    font-size: 32pt;
+}
+
+p 
+{
+    font-family: monospace;
+    color: #AAA;
+    text-align: center;
+}
+
+.grid-container
+{
+    width: 80%;
+    height: 40%;
+    margin: 0;
+    display: grid;
+    column-gap: 10%;
+    row-gap: 10%;
+    grid-template-columns: auto auto;
+    background-color: #267;
+    padding: 10px;
+}
+
+.link-container
+{
+    
+    width: 20%;
+    height: 5%;
+    background-color: #523;
+}
+
+a
+{
+    margin:auto;
+    font-family: monospace;
+    color: #AAA;
+    text-align: center;
+}
