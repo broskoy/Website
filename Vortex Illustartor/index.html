@@ -1,0 +1,24 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vortex Illustrator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="inputcontainer">
+        <button onclick="onclickbutton()">Compute</button>
+        <div>
+            <input class="slider" id="slider1" min="2" max="16" value="2" type="range"
+                oninput="slider1changed(event)"><br>
+            <label>Exponent base: </label><span id="slider1_value">2</span>
+        </div>
+        <div>
+            <input class="slider" id="slider2" min="16" max="256" value="16" type="range"
+                oninput="slider2changed(event)"><br>
+            <label>Maximum mode: </label><span id="slider2_value">16</span>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>

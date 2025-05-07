@@ -1,0 +1,33 @@
+
+Cards With Patterns
+https://codepen.io/thebabydino/pen/NWxBzRv
+
+Regular Polyhedra
+https://codepen.io/Dillo/pen/OJOjdQp
+
+Glowing Circle
+https://codepen.io/rgembalik/pen/OJygXJR
+
+Neomorphic Form
+https://codepen.io/swapnet/pen/QWwPVwE
+
+Cool Button
+https://codepen.io/jh3y/pen/ExQrVWo
+
+Sphere Animation
+https://codepen.io/Mamboleoo/pen/rNzYPjq
+
+Neon Buttons
+https://codepen.io/bhadupranjal/pen/vYLZYqQ
+
+Moders Sidebar Menu
+https://codepen.io/robstinson/pen/bGwpNMV
+
+Gradients
+https://codepen.io/marcobiedermann/pen/WNGWzYR
+
+Card Hover
+https://codepen.io/Jhonierpc/pen/MWgBJpy
+
+Cool Background Animation
+https://codepen.io/Saramazal/pen/LYyywNb

@@ -1,0 +1,17 @@
+body {
+text-align: center;
+background-color: black;
+}
+
+#buttoncontainer {
+width: 100%;
+position: absolute;
+top: 50px;
+}
+
+button {
+padding: 12px;
+border-radius: 15px;
+font-family: Monospace;
+font-size: 20pt;
+}
