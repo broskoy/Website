@@ -1,28 +1,36 @@
+// canvas reference variables
 var canvas = document.getElementById('canvas')
-var ctx = canvas.getContext('2d')
+var context = canvas.getContext('2d')
 
-// full canvas
+
+// make canvas fit any screen
 canvas.width = Math.min(window.innerWidth, window.innerHeight);;
 canvas.height = Math.min(window.innerWidth, window.innerHeight);;
 
-let E = 2; // eponential base
-// const B = 10; // numeral base - not used
-let m = E;
-let M = E;
+
+// variables of the math
+let base = 2; // exponential base by which we multiply every remainder
+let mode = 2; // mode to calculate remainders
+let maximumMode = 256; // maximum mode where we sto the animation
+
+
+// for how many frames to pause
+let pauseFrames = 60;
+let pauseFramesLeft = 0;
 
 
 // draw the corner text
 function drawText() 
 {
     // text preferences
-    ctx.fillStyle = '#FFF';
+    context.fillStyle = '#FFF';
     let fontsize = canvas.width / 12.0;
-    ctx.font = fontsize + 'px monospace';
+    context.font = fontsize + 'px monospace';
     let margin = canvas.width * 0.05;
 
     // draw text left and right
-    ctx.fillText(E, margin, fontsize + margin);
-    ctx.fillText(Math.trunc(m), canvas.width - 2 * fontsize - margin, fontsize + margin);
+    context.fillText(base, margin, fontsize + margin);
+    context.fillText(Math.trunc(mode), canvas.width - 2 * fontsize - margin, fontsize + margin);
 }
 
 
@@ -35,14 +43,14 @@ function drawShape()
     let shapeRadius = 0.4 * canvas.width; // circle radius
 
     // line preferences
-    let alpha = 0.2 + Math.pow(1.01, -m + E);
-    ctx.strokeStyle = `rgba(0, 255, 140, ${alpha})`;
-    ctx.lineWidth = 2;
+    let alpha = 0.2 + Math.pow(1.01, -mode + base);
+    context.strokeStyle = `rgba(0, 255, 140, ${alpha})`;
+    context.lineWidth = 2;
 
     // points  
-    for (var i = 0; i <= M; i++) {
-        let radians1 = 2.0 * Math.PI / m * i;
-        let radians2 = 2.0 * Math.PI / m * ((i * E) % m);
+    for (let digit = 0; digit <= mode; digit++) {
+        let radians1 = 2.0 * Math.PI / mode * digit;
+        let radians2 = 2.0 * Math.PI / mode * ((digit * base) % mode);
 
         // rotate by 90 degrees up
         radians1 -= Math.PI / 2;
@@ -54,77 +62,96 @@ function drawShape()
         let x2 = Math.cos(radians2) * shapeRadius;
         let y2 = Math.sin(radians2) * shapeRadius;
 
-        ctx.beginPath();
-        ctx.moveTo(centerX + x1, centerY + y1);
-        ctx.lineTo(centerX + x2, centerY + y2);
-        ctx.stroke();
+        context.beginPath();
+        context.moveTo(centerX + x1, centerY + y1);
+        context.lineTo(centerX + x2, centerY + y2);
+        context.stroke();
     }
 
     // circle
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, shapeRadius, 0, 2 * Math.PI);
-    ctx.stroke();
+    context.beginPath();
+    context.arc(centerX, centerY, shapeRadius, 0, 2 * Math.PI);
+    context.stroke();
 }
 
 
-let stopFrames = 60;
-let stopFramesLeft = 0;
-
-
-function frame() 
+// ensures there is a big pause between drawings
+function pauseFrame()
 {
-    if (M < m) {
-        while(true) {
-
-        }    
-    }
-
-    if (0 < stopFramesLeft) 
+    if (0 < pauseFramesLeft) 
     {
-        // it is waiting
-        stopFramesLeft--;
+        pauseFramesLeft--;
+        window.requestAnimationFrame(pauseFrame);
     }
     else 
     {
-        // update the canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        window.requestAnimationFrame(animateFrame);
+    }
+}
+
+
+// update the canvas
+function animateFrame() 
+{   
+    // if animation has ended
+    if (maximumMode < mode) 
+    {
+        document.getElementById("reload").style.visibility = 'visible';
+        return;
+    }
+    else
+    {
+        context.clearRect(0, 0, canvas.width, canvas.height);
         drawShape();
         drawText();
-        m++;
-        stopFramesLeft = Math.floor(stopFrames * (0.05 + Math.pow(1.05, -m + E)));
+        mode++;
+        pauseFramesLeft = Math.floor(pauseFrames * (0.05 + Math.pow(1.05, -mode + base)));
+
+        window.requestAnimationFrame(pauseFrame);
     }
-
-    window.requestAnimationFrame(frame);
 }
 
 
-// 
+// hide the panel and start the canvas animation
 function onclickbutton() {
-    document.getElementById("inputcontainer").style.display = 'none';
-    E = parseInt(document.getElementById("slider1").value);
-    M = parseInt(document.getElementById("slider2").value);
-    m = E;
+    document.getElementById("canvas").style.visibility = 'visible';
+    document.getElementById("inputcontainer").style.visibility = 'hidden';
+    base = parseInt(document.getElementById("slider1").value);
+    maximumMode = parseInt(document.getElementById("slider2").value);
+    mode = base;
 
-    window.requestAnimationFrame(frame);
+    window.requestAnimationFrame(animateFrame);
 }
 
 
 // update the value displayed under the slider
-function slider1changed(ev) {
-    let el = document.getElementById("slider1_value")
-    el.textContent = ev.target.value;
+function slider1changed(event) {
+    let element = document.getElementById("slider1-label");
+    element.textContent = event.target.value;
 }
 
 
 // update the value displayed under the slider
-function slider2changed(ev) {
-    let el = document.getElementById("slider2_value")
-    el.textContent = ev.target.value;
+function slider2changed(event) {
+    let element = document.getElementById("slider2-label");
+    element.textContent = event.target.value;
 }
 
 
-// TODO: add a button to restart beck to homescreen
+function reloadClicked() {
+    document.getElementById("inputcontainer").style.visibility = 'visible';
 
-// TODO: add fancy compute button and slider
+    base = 2;
+    mode = base;
+    document.getElementById("slider1").value = base;
+    document.getElementById("slider1-label").textContent = base;
+    
+    maximumMode = 16;
+    document.getElementById("slider2").value = maximumMode;
+    document.getElementById("slider2-label").textContent = maximumMode;
 
-// TODO: 
+    pauseFrames = 60;
+    pauseFramesLeft = 0;
+    document.getElementById("canvas").style.visibility = 'hidden';
+    document.getElementById("reload").style.visibility = 'hidden';
+}
