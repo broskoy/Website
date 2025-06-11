@@ -1,8 +1,8 @@
-add a slider to control "--radius"
-
 make a grid of applets
 
 add a template for creating custom ones
+
+make slider modern
 
 add good colors
 

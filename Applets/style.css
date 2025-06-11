@@ -1,0 +1,88 @@
+body {
+    background-color: #222;
+    width: 100vw;
+    height: 100vh;
+}
+
+.title {
+    color: #fff;
+    text-align: center;
+}
+
+.slider-container {
+    color: #fff;
+    width: 40vw;
+    margin-left: 30vw;
+    margin-right: 30vw;
+    margin-bottom: 5vh;
+    text-align: center;
+}
+
+.slider {
+    width: 40vw;
+}
+
+.applets {
+    width: 60vw;
+    height: 60vw;
+    margin-left: 20vw;
+    margin-right: 20vw;
+}
+
+:root {
+    --radius: 1vh;
+}
+
+.one {
+    border-radius: var(--radius);
+    background: #0aa;
+    text-align: center;
+    width: 24vh;
+    height: 6vh;
+    margin: 3vh;
+}
+
+.two {
+    border-radius: var(--radius);
+    background: #0cc;
+    text-align: center;
+    width: 18vh;
+    height: 12vh;
+    margin: 3vh;
+}
+
+.three {
+    border-radius: var(--radius);
+    background: #0cc;
+    text-align: center;
+    width: 6vh;
+    height: 6vh;
+    margin: 3vh;
+}
+
+.four {
+    border-radius: var(--radius);
+    background: #0cc;
+    text-align: center;
+    width: 6vh;
+    height: 6vh;
+    margin: 3vh;
+}
+
+.five {
+    border-radius: var(--radius);
+    background: #0cc;
+    text-align: center;
+    width: 6vh;
+    height: 6vh;
+    margin: 3vh;
+}
+
+.six {
+    border-radius: var(--radius);
+    background: #0cc;
+    text-align: center;
+    width: 12vh;
+    height: 6vh;
+    margin: 3vh;
+}
