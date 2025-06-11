@@ -1,0 +1,9 @@
+add a slider to control "--radius"
+
+make a grid of applets
+
+add a template for creating custom ones
+
+add good colors
+
+give applets shadow
