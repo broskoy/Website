@@ -13,14 +13,15 @@ html
 body 
 {
     background-image: linear-gradient(to right top, #ff0076, #590fb7);
-    display: flex;
-    flex-direction: column;
     /*
     #ed7b84 – #9055ff
     #ff0076 – #590fb7
     */
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100%;
+    margin: 0;
 }
 
 
