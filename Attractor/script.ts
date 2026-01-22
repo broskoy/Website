@@ -1,6 +1,6 @@
-const WIDTH = 1920;
-const HEIGHT = 1080;
-const DOT_COUNT = 100;
+const WIDTH = window.innerWidth;
+const HEIGHT = window.innerHeight
+const DOT_COUNT = 2000;
 
 
 const canvas = document.createElement('canvas');
@@ -11,7 +11,7 @@ document.body.style.backgroundColor = "black";
 const ctx = canvas.getContext('2d')!;
 
 
-type Point = { x: number; y: number; z: number; colorOffset: number };
+type Point = { x: number; y: number; z: number};
 
 
 function randomRange(min: number, max: number): number {
@@ -23,8 +23,7 @@ function initXYZ(): Point {
   return {
     x: randomRange(-3, 3),
     y: randomRange(-3, 3),
-    z: randomRange(-3, 3),
-    colorOffset: Math.floor(Math.random() * 30) // random int 0-30
+    z: randomRange(-3, 3)
   };
 }
 
@@ -38,7 +37,7 @@ function newPos(p: Point, t: number): Point {
     x = fresh.x; y = fresh.y; z = fresh.z;
   }
 
-  const dt = t / 5000;
+  const dt = t / 10000;
   const a = 1.89;
 
   // halvorsen equations
@@ -51,7 +50,7 @@ function newPos(p: Point, t: number): Point {
 
 
 // initialization
-let dots: Point[] = Array.from({ length: 100 }, () => initXYZ());
+let dots: Point[] = Array.from({ length: DOT_COUNT }, () => initXYZ());
 
 
 function loop() {
@@ -59,25 +58,26 @@ function loop() {
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-  // iterate unoptimized
   for (let i = 0; i < dots.length; i++) {
     // update position
     dots[i] = newPos(dots[i], 16);
     const d = dots[i];
 
     // calculate color
-    const r = Math.min(255, Math.max(0, 150 + d.colorOffset + (d.z * 5)));
-    const g = Math.min(255, Math.max(0, 100 + d.colorOffset + (d.z * 5)));
-    const b = Math.min(255, Math.max(0, 150 + d.colorOffset + (d.z * 5)));
+    const r = Math.min(255, Math.max(0, 150 + (d.z * 5)));
+    const g = Math.min(255, Math.max(0, 100 + (d.z * 5)));
+    const b = Math.min(255, Math.max(0, 150 + (d.z * 5)));
     
     // Draw Dot
     ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
     ctx.beginPath();
 
+    const scale = Math.min(WIDTH, HEIGHT) / 25;
+
     ctx.arc(
-      d.x * 40 + WIDTH / 2 + 100,
-      d.y * 40 + HEIGHT / 2 + 100,
-      5,
+      d.x * scale + WIDTH / 2 + 100,
+      d.y * scale + HEIGHT / 2 + 100,
+      4,
       0,
       Math.PI * 2
     );
