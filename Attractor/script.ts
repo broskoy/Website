@@ -1,91 +1,147 @@
-const WIDTH = window.innerWidth;
-const HEIGHT = window.innerHeight
-const DOT_COUNT = 2000;
-
-
+// create canvas
 const canvas = document.createElement('canvas');
-canvas.width = WIDTH;
-canvas.height = HEIGHT;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 document.body.appendChild(canvas);
-document.body.style.backgroundColor = "black";
+document.body.style.backgroundColor = "#222";
 const ctx = canvas.getContext('2d')!;
 
 
-type Point = { x: number; y: number; z: number};
+// constants
+const DOT_COUNT = 2000;
+const SCALE = 24;
+const FOCAL_LENGTH = 400;
+const ATTRACTOR = 0;
+
+
+
+// types
+type Dot = { x: number; y: number; z: number };
+type RenderDot = { x: number; y: number; r: number; color: string; depth: number };
+
+
+// data arrays
+let dots: Dot[] = Array.from({ length: DOT_COUNT }, () => randomDot());
+let renderDots: RenderDot[] = Array.from({ length: DOT_COUNT }, () => emptyRenderDot());
+let angle = 0;
 
 
 function randomRange(min: number, max: number): number {
-  return Math.random() * (max - min) + min;
+    return Math.random() * (max - min) + min;
 }
 
 
-function initXYZ(): Point {
-  return {
-    x: randomRange(-3, 3),
-    y: randomRange(-3, 3),
-    z: randomRange(-3, 3)
-  };
+function randomDot(): Dot {
+    return {
+        x: randomRange(0, 3),
+        y: randomRange(0, 3),
+        z: randomRange(0, 3)
+    };
+}
+
+function emptyRenderDot(): RenderDot {
+    return {
+        x: 0,
+        y: 0,
+        r: 0,
+        color: 'rgb(0,0,0)',
+        depth: 0
+    }
+}
+
+function halvorsen(dot: Dot): Dot {
+    const dt = 0.001;
+    const a = 1.89;
+
+    const dx = -a * dot.x - 4 * dot.y - 4 * dot.z - dot.y ** 2;
+    const dy = -a * dot.y - 4 * dot.z - 4 * dot.x - dot.z ** 2;
+    const dz = -a * dot.z - 4 * dot.x - 4 * dot.y - dot.x ** 2;
+
+    dot.x += dt * dx;
+    dot.y += dt * dy;
+    dot.z += dt * dz;
+
+    return dot;
 }
 
 
-function newPos(p: Point, t: number): Point {
-  let { x, y, z } = p;
+function updatePositions() {
+    for (let i = 0; i < dots.length; i++) {
+        let dot = dots[i];
 
-  // reset if out of bounds
-  if (Math.abs(x) > 100 || Math.abs(y) > 100 || Math.abs(z) > 100) {
-    const fresh = initXYZ();
-    x = fresh.x; y = fresh.y; z = fresh.z;
-  }
+        // prevent out of bounds
+        if (Math.abs(dot.x) > 20 || Math.abs(dot.y) > 20 || Math.abs(dot.z) > 20) {
+            dot = randomDot();
+            continue;
+        }
 
-  const dt = t / 10000;
-  const a = 1.89;
-
-  // halvorsen equations
-  const new_x = x + dt * (-a * x - 4 * y - 4 * z - y ** 2);
-  const new_y = y + dt * (-a * y - 4 * z - 4 * x - z ** 2);
-  const new_z = z + dt * (-a * z - 4 * x - 4 * y - x ** 2);
-
-  return { ...p, x: new_x, y: new_y, z: new_z };
+        dot = halvorsen(dot);
+    }
 }
 
 
-// initialization
-let dots: Point[] = Array.from({ length: DOT_COUNT }, () => initXYZ());
+function projectToScreen() {
+    for (let i = 0; i < renderDots.length; i++) {
+        let dot = dots[i]
+        let renderDot = renderDots[i]
+
+        // center attractor
+        const worldX = dot.x + 4;
+        const worldY = dot.y + 2;
+        const worldZ = dot.z + 3;
+
+        // move camera (around y axis)
+        const rotX = worldX * Math.cos(angle) - worldZ * Math.sin(angle);
+        const rotZ = worldX * Math.sin(angle) + worldZ * Math.cos(angle);
+        const rotY = worldY;
+
+        // project 3d into 2d
+        const perspective = FOCAL_LENGTH / (FOCAL_LENGTH + rotZ + 80);
+
+        // calculate color
+        const intensity = rotZ;
+        const r = Math.min(255, Math.max(0, 100 - (intensity * 5)));
+        const g = Math.min(255, Math.max(0, 150 - (intensity * 5)));
+        const b = Math.min(255, Math.max(0, 150 - (intensity * 5)));
+
+        renderDot.x = (canvas.width / 2) + (rotX * perspective * SCALE),
+            renderDot.y = (canvas.height / 2) + (rotY * perspective * SCALE),
+            renderDot.r = 5 * perspective,
+            renderDot.color = `rgb(${r}, ${g}, ${b})`,
+            renderDot.depth = rotZ
+    }
+}
+
+
+function drawDots() {
+    for (let renderDot of renderDots) {
+        ctx.fillStyle = renderDot.color;
+        ctx.beginPath();
+        ctx.arc(renderDot.x, renderDot.y, renderDot.r, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
 
 
 function loop() {
-  // clear screen
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    ctx.fillStyle = "#222";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  for (let i = 0; i < dots.length; i++) {
-    // update position
-    dots[i] = newPos(dots[i], 16);
-    const d = dots[i];
+    // world coordinates
+    updatePositions();
 
-    // calculate color
-    const r = Math.min(255, Math.max(0, 150 + (d.z * 5)));
-    const g = Math.min(255, Math.max(0, 100 + (d.z * 5)));
-    const b = Math.min(255, Math.max(0, 150 + (d.z * 5)));
-    
-    // Draw Dot
-    ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-    ctx.beginPath();
+    // view coordinates
+    projectToScreen();
 
-    const scale = Math.min(WIDTH, HEIGHT) / 25;
+    // sort by depth
+    renderDots.sort((a, b) => b.depth - a.depth);
 
-    ctx.arc(
-      d.x * scale + WIDTH / 2 + 100,
-      d.y * scale + HEIGHT / 2 + 100,
-      4,
-      0,
-      Math.PI * 2
-    );
-    ctx.fill();
-  }
+    // draw
+    drawDots();
 
-  requestAnimationFrame(loop);
+    angle += 0.002;
+
+    requestAnimationFrame(loop);
 }
-
 
 loop();
