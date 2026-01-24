@@ -1,0 +1,4 @@
+> make some grid lines
+> separate into multiple ts files
+> add mouse movement
+> fix the trailing effect
