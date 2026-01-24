@@ -69,7 +69,7 @@ const attractors: Record<string, AttractorProfile> = {
         bounds: 60,
         speed: 1,
         offset: { x: 0, y: 0, z: -25 },
-        baseColor: [200, 100, 100],
+        baseColor: [240, 100, 100],
         init: () => ({
             x: randomRange(-10, 10),
             y: randomRange(-10, 10),
@@ -96,7 +96,7 @@ const attractors: Record<string, AttractorProfile> = {
         bounds: 20,
         speed: 0.01,
         offset: { x: 0, y: 0, z: 0 },
-        baseColor: [230, 200, 0],
+        baseColor: [230, 220, 0],
         init: () => ({
             x: randomRange(-0.1, 0.1),
             y: randomRange(-0.1, 0.1),
@@ -181,7 +181,7 @@ function initSimulation() {
 // 5. STATE MANAGEMENT
 // ---------------------------------------------------------
 
-let currentAttractor = 'thomas';
+let currentAttractor = 'halvorsen';
 let dots: Dot[] = [];
 let renderDots: RenderDot[] = [];
 let angle = 0;
