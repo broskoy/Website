@@ -1,33 +1,124 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirect</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Homepage</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+        html { -ms-overflow-style: none; scrollbar-width: none; }
+
+        body {
+            background-image: linear-gradient(to right top, #ff0076, #590fb7);
+            background-attachment: fixed;
+        }
+    </style>
 </head>
 
+<body class="min-h-full font-mono text-white overflow-y-auto">
 
-<body>
-    <h1 class="welcome">Welcome Stranger?</h1>
+    <header class="flex flex-col items-center pt-10 pb-20 md:pt-12">
+        <h1 class="text-3xl md:text-6xl font-bold mb-4 text-center">
+            Broskoy's Workshop
+        </h1>
+        <p class="text-gray-200 text-base md:text-xl text-center px-4">
+            Click on a link and explore the demo
+        </p>
+    </header>
 
-    <p class="explanation">
-        If you are seing this page it means that the redirect failed. <br>
-        Do not worry, just choose one of the links provided below.
-    </p>
+    <main class="mx-auto w-full max-w-7xl px-6 pb-12">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-10">
 
-    <p class="explanation"></p>
+            <a href="./Graviton/" class="group flex flex-row shadow-[0_20px_50px_rgba(0,0,0,0.8)] h-40 overflow-hidden transition-transform hover:scale-[1.02]">
+                <img src="cat1.jpg" class="w-32 md:w-40 h-full object-cover shrink-0" alt="Clock">
+                <div class="flex flex-col justify-center p-5 w-full">
+                    <h2 class="text-xl md:text-2xl mb-2 text-gray-100 group-hover:text-white">Graviton</h2>
+                    <p class="text-sm md:text-base text-gray-300 line-clamp-3 leading-snug">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Esse doloribus aperiam cum dolor itaque.
+                    </p>
+                </div>
+            </a>
 
-    <a class="link" href="home-landscape.html">Desktop Website</a>
-    <a class="link" href="home-portrait.html">Mobile Website</a>
+            <a href="./Applets/applets.html" class="group flex flex-row shadow-[0_20px_50px_rgba(0,0,0,0.8)] h-40 overflow-hidden transition-transform hover:scale-[1.02]">
+                <img src="cat2.jpg" class="w-32 md:w-40 h-full object-cover shrink-0" alt="Applets">
+                <div class="flex flex-col justify-center p-5 w-full">
+                    <h2 class="text-xl md:text-2xl mb-2 text-gray-100 group-hover:text-white">Applets</h2>
+                    <p class="text-sm md:text-base text-gray-300 line-clamp-3 leading-snug">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Esse doloribus aperiam cum dolor itaque.
+                    </p>
+                </div>
+            </a>
 
+            <a href="./Attractor/" class="group flex flex-row shadow-[0_20px_50px_rgba(0,0,0,0.8)] h-40 overflow-hidden transition-transform hover:scale-[1.02]">
+                <img src="cat3.jpg" class="w-32 md:w-40 h-full object-cover shrink-0" alt="Attractor">
+                <div class="flex flex-col justify-center p-5 w-full">
+                    <h2 class="text-xl md:text-2xl mb-2 text-gray-100 group-hover:text-white">Attractor</h2>
+                    <p class="text-sm md:text-base text-gray-300 line-clamp-3 leading-snug">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Esse doloribus aperiam cum dolor itaque.
+                    </p>
+                </div>
+            </a>
 
-    <script>
-        if (window.innerWidth / window.innerHeight > 1)
-            window.location.href = "home-landscape.html";
-        else 
-            window.location.href = "home-portrait.html";
-    </script>
+            <a href="https://solarcode.net" class="group flex flex-row shadow-[0_20px_50px_rgba(0,0,0,0.8)] h-40 overflow-hidden transition-transform hover:scale-[1.02]">
+                <img src="cat4.jpg" class="w-32 md:w-40 h-full object-cover shrink-0" alt="TicTacToe">
+                <div class="flex flex-col justify-center p-5 w-full">
+                    <h2 class="text-xl md:text-2xl mb-2 text-gray-100 group-hover:text-white">Solarcode</h2>
+                    <p class="text-sm md:text-base text-gray-300 line-clamp-3 leading-snug">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Esse doloribus aperiam cum dolor itaque.
+                    </p>
+                </div>
+            </a>
+
+            <a href="./Stellated Polygons/index.html" class="group flex flex-row shadow-[0_20px_50px_rgba(0,0,0,0.8)] h-40 overflow-hidden transition-transform hover:scale-[1.02]">
+                <img src="cat5.jpg" class="w-32 md:w-40 h-full object-cover shrink-0" alt="Stellation">
+                <div class="flex flex-col justify-center p-5 w-full">
+                    <h2 class="text-xl md:text-2xl mb-2 text-gray-100 group-hover:text-white">Stellation</h2>
+                    <p class="text-sm md:text-base text-gray-300 line-clamp-3 leading-snug">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Esse doloribus aperiam cum dolor itaque.
+                    </p>
+                </div>
+            </a>
+
+            <a href="./Vortex Illustartor/index.html" class="group flex flex-row shadow-[0_20px_50px_rgba(0,0,0,0.8)] h-40 overflow-hidden transition-transform hover:scale-[1.02]">
+                <img src="cat6.jpg" class="w-32 md:w-40 h-full object-cover shrink-0" alt="Vortex">
+                <div class="flex flex-col justify-center p-5 w-full">
+                    <h2 class="text-xl md:text-2xl mb-2 text-gray-100 group-hover:text-white">Vortex</h2>
+                    <p class="text-sm md:text-base text-gray-300 line-clamp-3 leading-snug">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Esse doloribus aperiam cum dolor itaque.
+                    </p>
+                </div>
+            </a>
+
+            <a href="./Graviton/" class="group flex flex-row shadow-[0_20px_50px_rgba(0,0,0,0.8)] h-40 overflow-hidden transition-transform hover:scale-[1.02]">
+                <img src="cat1.jpg" class="w-32 md:w-40 h-full object-cover shrink-0" alt="Clock">
+                <div class="flex flex-col justify-center p-5 w-full">
+                    <h2 class="text-xl md:text-2xl mb-2 text-gray-100 group-hover:text-white">Clock</h2>
+                    <p class="text-sm md:text-base text-gray-300 line-clamp-3 leading-snug">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Esse doloribus aperiam cum dolor itaque.
+                    </p>
+                </div>
+            </a>
+
+            <a href="./Graviton/" class="group flex flex-row shadow-[0_20px_50px_rgba(0,0,0,0.8)] h-40 overflow-hidden transition-transform hover:scale-[1.02]">
+                <img src="cat1.jpg" class="w-32 md:w-40 h-full object-cover shrink-0" alt="Clock">
+                <div class="flex flex-col justify-center p-5 w-full">
+                    <h2 class="text-xl md:text-2xl mb-2 text-gray-100 group-hover:text-white">Clock</h2>
+                    <p class="text-sm md:text-base text-gray-300 line-clamp-3 leading-snug">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Esse doloribus aperiam cum dolor itaque.
+                    </p>
+                </div>
+            </a>
+
+        </div>
+    </main>
 </body>
-
 </html>
