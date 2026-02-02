@@ -1,1 +1,35 @@
 > only allow landscape mode
+
+
+Attraction Matrix & Gravity
+
+    Java: Uses a GRAVITY flag (default true) and an attraction[][] matrix. This defines how different particle "types" (0–3) attract or repel each other using Newtonian forces.
+
+    TS: Has a placeholder GRAVITY constant but no implementation. It lacks the concept of particle "types" and the N2 (or optimized) force calculation loop.
+
+
+Virtual Coordinate System (Camera)
+
+    Java: Simulates a "Universe" defined by BARRIER (e.g., -50 to 50 units) and scales it to fit the screen. It allows the user to pan around using a Camera object.
+
+    TS: Maps the simulation 1:1 to the browser window pixels. If the window resizes, the simulation bounds change.
+
+
+Input Handling
+
+    Java: KeyHandler allows pausing (Space) and camera movement (Arrows).
+
+    TS: No input listeners are attached; the simulation runs automatically and cannot be paused or moved.
+
+
+Deceleration (Friction)
+
+    Java: Multiplies velocity by 0.99 every frame to stabilize energy.
+
+    TS: Particles maintain momentum forever (frictionless).
+
+
+OPTIONAL
+> merging particles
+> gravity variants besides newtonian
+>
