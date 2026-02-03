@@ -10,6 +10,15 @@
 > right side bar with tools placeholder
 
 
-OPTIONAL
-> merging particles
-> gravity variants besides newtonian
+
+Project A: The "Newtonian" Simulator (3D + WebGPU)
+
+    Goal: Realism, Orbital Mechanics, Galaxy Formation.
+
+    The Math: Strict Conservation of Energy. You need symplectic integrators (Verlet) and 1/r2 gravity.
+
+    The Vibe: Precise, cold, scientific. You want to see moons orbiting planets orbiting suns.
+
+    Why WebGPU? Calculating gravity for thousands of particles is an N2 operation (expensive!). CPU JavaScript chokes after ~2,000 particles. WebGPU (Compute Shaders) can handle 100,000+ particles easily, allowing you to simulate actual galaxies with dust lanes.
+
+    Visuals: A central light source (the "Sun") casting shadows on the planets adds massive depth and helps you see the 3D structure.
