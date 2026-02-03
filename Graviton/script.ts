@@ -14,30 +14,27 @@ const ctx = canvas.getContext('2d')!;
 // 2 CONSTANTS & VIRTUAL WORLD
 // ---------------------------------------------------------
 
-const BARRIER = 50;
-
-// Calculate Scale: How many pixels represent 1 unit?
-const SCALE = Math.min(canvas.width, canvas.height) / 108;
-
+// Simulation settings
+const SCALE = Math.min(canvas.width, canvas.height) / 100;
 const FPS = 60;
 const PARTICLE_COUNT = 20;
+const BARRIER = 50;
 
-// Chunk size in units
-const CHUNK_SIZE = 10;
-
-const GRAVITY = false;
+// Gravity settings
+const GRAVITY = true;
 const DECELERATION_FACTOR = 0.9999;
 
-
+// Collision settings
 const COLLISION = true;
-const ELASTICITY = 0.5;
+const ELASTICITY = 0.9;
 
-// Dynamic Grid Sizing (Based on Virtual Units)
+// Dynamic chunk grid 
+const CHUNK_SIZE = 10;
 const COLS = Math.ceil(BARRIER * 2 / CHUNK_SIZE);
 const ROWS = Math.ceil(BARRIER * 2 / CHUNK_SIZE);
 
-// Matrix Configuration
-const attractionMatrix = [
+// Attraction Configuration
+const attractions = [
     [1.0, 1.0, -1.0, 0.0],
     [0.0, 1.0, 1.0, -1.0],
     [-1.0, 0.0, 1.0, 1.0],
@@ -78,6 +75,10 @@ function initChunks() {
     }
 }
 
+function randomRange(min: number, max: number): number {
+    return Math.random() * (max - min) + min;
+}
+
 function createParticle(): Particle {
     const type: number = 0;
     let color = "#FFFFFF";
@@ -90,10 +91,10 @@ function createParticle(): Particle {
     }
 
     return {
-        x: (Math.random() * BARRIER * 2) - BARRIER,
-        y: (Math.random() * BARRIER * 2) - BARRIER,
-        vx: 1,
-        vy: 1,
+        x: randomRange(-BARRIER, +BARRIER),
+        y: randomRange(-BARRIER, +BARRIER),
+        vx: randomRange(-0.1, +0.1),
+        vy: randomRange(-0.1, +0.1),
         radius: 1,
         mass: 1,
         color: color,
@@ -110,28 +111,29 @@ initChunks();
 // ---------------------------------------------------------
 
 function applyGravity() {
-    for (let i = 0; i < particles.length; i++) {
-        const p1 = particles[i];
+    for (let p1 of particles) {
         let fx = 0;
         let fy = 0;
 
-        for (let j = 0; j < particles.length; j++) {
-            if (i === j) continue;
-            const p2 = particles[j];
+        for (let p2 of particles) {
+            if (p1 === p2) continue;
+
 
             const dx = p2.x - p1.x;
             const dy = p2.y - p1.y;
-            const distSq = dx * dx + dy * dy;
+            const distanceSquared = dx * dx + dy * dy;
+            if (distanceSquared > 40000) continue;
+            let distance = Math.sqrt(distanceSquared);
 
             // Stop gravity when overlaping
-            const overlapDistance = particles[i].radius + particles[j].radius;
-            const safeDistSq = Math.max(distSq, overlapDistance);
+            const overlapDistance = p1.radius + p2.radius;
+            distance = Math.max(distance, overlapDistance);
 
-            const forceFactor = (p1.mass * p2.mass) / safeDistSq;
-            const attr = attractionMatrix[p1.type][p2.type];
+            const forceFactor = (p1.mass * p2.mass) / (distance ** 2);
+            const attraction = attractions[p1.type][p2.type];
 
-            fx += forceFactor * dx * attr;
-            fy += forceFactor * dy * attr;
+            fx += forceFactor * (dx / distance) * attraction;
+            fy += forceFactor * (dy / distance) * attraction;
         }
 
         p1.vx += fx / p1.mass / FPS;
