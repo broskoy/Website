@@ -15,14 +15,14 @@ const ctx = canvas.getContext('2d')!;
 // ---------------------------------------------------------
 
 // Simulation settings
-const SCALE = Math.min(canvas.width, canvas.height) / 100;
+const SCALE = Math.min(canvas.width, canvas.height) / 108;
 const FPS = 60;
-const PARTICLE_COUNT = 20;
-const BARRIER = 50;
+const PARTICLE_COUNT = 10;
+const BARRIER = 60;
 
 // Gravity settings
 const GRAVITY = true;
-const DECELERATION_FACTOR = 0.9999;
+const GRAVITY_STRENGTH = 100;
 
 // Collision settings
 const COLLISION = true;
@@ -49,6 +49,10 @@ const attractions = [
 type Particle = {
     x: number;
     y: number;
+    // Verlet History
+    oldX: number;
+    oldY: number;
+    // Helpers
     vx: number;
     vy: number;
     radius: number;
@@ -90,11 +94,18 @@ function createParticle(): Particle {
         case 3: color = "#FFFF00"; break;
     }
 
+    const x = randomRange(-BARRIER, +BARRIER);
+    const y = randomRange(-BARRIER, +BARRIER);
+    const vx = randomRange(-0.5, +0.5);
+    const vy = randomRange(-0.5, +0.5);
+
     return {
-        x: randomRange(-BARRIER, +BARRIER),
-        y: randomRange(-BARRIER, +BARRIER),
-        vx: randomRange(-0.1, +0.1),
-        vy: randomRange(-0.1, +0.1),
+        x: x,
+        y: y,
+        oldX: x - vx,
+        oldY: y - vy,
+        vx: vx,
+        vy: vy,
         radius: 1,
         mass: 1,
         color: color,
@@ -118,32 +129,30 @@ function applyGravity() {
         for (let p2 of particles) {
             if (p1 === p2) continue;
 
+            // FIX: Use oldX/oldY to calculate force based on CURRENT position,
+            // not the future position. This restores Energy Conservation.
+            const dx = p2.oldX - p1.oldX;
+            const dy = p2.oldY - p1.oldY;
 
-            const dx = p2.x - p1.x;
-            const dy = p2.y - p1.y;
             const distanceSquared = dx * dx + dy * dy;
             if (distanceSquared > 40000) continue;
-            let distance = Math.sqrt(distanceSquared);
 
-            // Stop gravity when overlaping
+            let distance = Math.sqrt(distanceSquared);
             const overlapDistance = p1.radius + p2.radius;
             distance = Math.max(distance, overlapDistance);
 
-            const forceFactor = (p1.mass * p2.mass) / (distance ** 2);
+            const forceFactor = GRAVITY_STRENGTH * (p1.mass * p2.mass) / distance;
             const attraction = attractions[p1.type][p2.type];
 
             fx += forceFactor * (dx / distance) * attraction;
             fy += forceFactor * (dy / distance) * attraction;
         }
 
-        p1.vx += fx / p1.mass / FPS;
-        p1.vy += fy / p1.mass / FPS;
-    }
-
-    // Apply Friction
-    for (let p of particles) {
-        p.vx *= DECELERATION_FACTOR;
-        p.vy *= DECELERATION_FACTOR;
+        // MINOR FIX: You were adding Velocity (a*t) to Position directly.
+        // You need Displacement (0.5*a*t^2). 
+        // Dividing by FPS again corrects the units so gravity isn't 60x too strong.
+        p1.vx += fx / p1.mass / FPS / FPS;
+        p1.vy += fy / p1.mass / FPS / FPS;
     }
 }
 
@@ -232,39 +241,79 @@ function checkCollisions(cx: number, cy: number) {
     }
 }
 
-function updatePhysics() {
-    if (GRAVITY) applyGravity();
+function updateGravity() {
+    for (let p of particles) {
+        const vx = (p.x - p.oldX);
+        const vy = (p.y - p.oldY);
+
+        p.oldX = p.x;
+        p.oldY = p.y;
+
+        p.x += vx;
+        p.y += vy;
+
+        p.vx = vx;
+        p.vy = vy;
+    }
+    applyGravity();
+    for (let p of particles) {
+        p.x += (p.vx - (p.x - p.oldX));
+        p.y += (p.vy - (p.y - p.oldY));
+    }
+}
+
+function updateCollision() {
+    updateChunkAssignments();
+    for (let x = 0; x < COLS; x++) {
+        for (let y = 0; y < ROWS; y++) {
+            checkCollisions(x, y);
+        }
+    }
 
     for (let p of particles) {
-        p.x += p.vx;
-        p.y += p.vy;
+        p.oldX = p.x - p.vx;
+        p.oldY = p.y - p.vy;
+    }
+}
 
+function checkBarrier() {
+    for (let p of particles) {
+        // Border constraints
+        let collided = false;
         if (p.x < -BARRIER + p.radius) {
             p.x = -BARRIER + p.radius;
             p.vx *= -1;
+            collided = true;
         }
         if (p.x > BARRIER - p.radius) {
             p.x = BARRIER - p.radius;
             p.vx *= -1;
+            collided = true;
         }
         if (p.y < -BARRIER + p.radius) {
             p.y = -BARRIER + p.radius;
             p.vy *= -1;
+            collided = true;
         }
         if (p.y > BARRIER - p.radius) {
             p.y = BARRIER - p.radius;
             p.vy *= -1;
+            collided = true;
         }
-    }
 
-    if (COLLISION) {
-        updateChunkAssignments();
-        for (let x = 0; x < COLS; x++) {
-            for (let y = 0; y < ROWS; y++) {
-                checkCollisions(x, y);
-            }
+        if (collided) {
+            p.oldX = p.x - p.vx;
+            p.oldY = p.y - p.vy;
         }
     }
+}
+
+function updatePhysics() {
+
+    if (GRAVITY) updateGravity();
+    if (COLLISION) updateCollision();
+
+    checkBarrier();
 }
 
 
@@ -286,8 +335,6 @@ function draw() {
 
     // Draw Particles
     for (let p of particles) {
-        // Transform Logical Coordinate -> Screen Coordinate
-        // ScreenX = (UnitX * Scale) + ScreenCenter
         const drawX = (p.x * SCALE) + canvas.width / 2;
         const drawY = (p.y * SCALE) + canvas.height / 2;
         const drawRadius = p.radius * SCALE;
