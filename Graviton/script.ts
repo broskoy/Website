@@ -14,11 +14,10 @@ const ctx = canvas.getContext('2d')!;
 // 2 CONSTANTS & VIRTUAL WORLD
 // ---------------------------------------------------------
 
-const BARRIER = 100;
-const WORLD_SIZE = BARRIER * 2;
+const BARRIER = 50;
 
 // Calculate Scale: How many pixels represent 1 unit?
-const SCALE = Math.min(canvas.width, canvas.height) / 216;
+const SCALE = Math.min(canvas.width, canvas.height) / 108;
 
 const FPS = 60;
 const PARTICLE_COUNT = 20;
@@ -26,13 +25,16 @@ const PARTICLE_COUNT = 20;
 // Chunk size in units
 const CHUNK_SIZE = 10;
 
-const GRAVITY = true;
+const GRAVITY = false;
 const DECELERATION_FACTOR = 0.9999;
-const COLLISION = false;
+
+
+const COLLISION = true;
+const ELASTICITY = 0.5;
 
 // Dynamic Grid Sizing (Based on Virtual Units)
-const COLS = Math.ceil(WORLD_SIZE / CHUNK_SIZE);
-const ROWS = Math.ceil(WORLD_SIZE / CHUNK_SIZE);
+const COLS = Math.ceil(BARRIER * 2 / CHUNK_SIZE);
+const ROWS = Math.ceil(BARRIER * 2 / CHUNK_SIZE);
 
 // Matrix Configuration
 const attractionMatrix = [
@@ -88,10 +90,10 @@ function createParticle(): Particle {
     }
 
     return {
-        x: (Math.random() * WORLD_SIZE) - BARRIER,
-        y: (Math.random() * WORLD_SIZE) - BARRIER,
-        vx: 0,
-        vy: 0,
+        x: (Math.random() * BARRIER * 2) - BARRIER,
+        y: (Math.random() * BARRIER * 2) - BARRIER,
+        vx: 1,
+        vy: 1,
         radius: 1,
         mass: 1,
         color: color,
@@ -121,8 +123,9 @@ function applyGravity() {
             const dy = p2.y - p1.y;
             const distSq = dx * dx + dy * dy;
 
-            // Softening parameter to prevent infinity
-            const safeDistSq = Math.max(distSq, 0.1);
+            // Stop gravity when overlaping
+            const overlapDistance = particles[i].radius + particles[j].radius;
+            const safeDistSq = Math.max(distSq, overlapDistance);
 
             const forceFactor = (p1.mass * p2.mass) / safeDistSq;
             const attr = attractionMatrix[p1.type][p2.type];
@@ -192,10 +195,10 @@ function resolveCollision(p1: Particle, p2: Particle) {
             const massRatio1 = (2 * m2) / totalMass;
             const massRatio2 = (2 * m1) / totalMass;
 
-            p1.vx += massRatio1 * product * nx;
-            p1.vy += massRatio1 * product * ny;
-            p2.vx -= massRatio2 * product * nx;
-            p2.vy -= massRatio2 * product * ny;
+            p1.vx += massRatio1 * product * nx * ELASTICITY;
+            p1.vy += massRatio1 * product * ny * ELASTICITY;
+            p2.vx -= massRatio2 * product * nx * ELASTICITY;
+            p2.vy -= massRatio2 * product * ny * ELASTICITY;
         }
     }
 }
@@ -271,16 +274,11 @@ function draw() {
     ctx.fillStyle = "#140014";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Center of the screen
-    const cx = canvas.width / 2;
-    const cy = canvas.height / 2;
-
-    // Draw Border (Visualizing the Barrier)
+    // Draw Barrier
     ctx.strokeStyle = "white";
     ctx.lineWidth = 2;
-    // Map -50 to screen coords
-    const boxX = (-BARRIER * SCALE) + cx;
-    const boxY = (-BARRIER * SCALE) + cy;
+    const boxX = (-BARRIER * SCALE) + canvas.width / 2;
+    const boxY = (-BARRIER * SCALE) + canvas.height / 2;
     const boxSize = (BARRIER * 2) * SCALE;
     ctx.strokeRect(boxX, boxY, boxSize, boxSize);
 
@@ -288,8 +286,8 @@ function draw() {
     for (let p of particles) {
         // Transform Logical Coordinate -> Screen Coordinate
         // ScreenX = (UnitX * Scale) + ScreenCenter
-        const drawX = (p.x * SCALE) + cx;
-        const drawY = (p.y * SCALE) + cy;
+        const drawX = (p.x * SCALE) + canvas.width / 2;
+        const drawY = (p.y * SCALE) + canvas.height / 2;
         const drawRadius = p.radius * SCALE;
 
         ctx.fillStyle = p.color;

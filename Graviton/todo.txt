@@ -1,15 +1,15 @@
 > add vercel integration to remove decelerate
 > only allow landscape mode
+> pausing (Space) 
+> camera movement (Arrows)
 
-
-Input Handling
-
-    Java: KeyHandler allows pausing (Space) and camera movement (Arrows).
-
-    TS: No input listeners are attached; the simulation runs automatically and cannot be paused or moved.
+> title
+> title screen
+> helpful key hints
+> control bar at the top placeholder
+> right side bar with tools placeholder
 
 
 OPTIONAL
 > merging particles
 > gravity variants besides newtonian
->
