@@ -205,58 +205,12 @@ function loop() {
 // ---------------------------------------------------------
 // 7. START
 // ---------------------------------------------------------
-initSimulation();
-createUI();
-loop();
-// Handle Resize
-window.addEventListener('resize', () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+const select = document.getElementById('attractorSelect');
+select.value = currentAttractor;
+select.addEventListener('change', (e) => {
+    const target = e.target;
+    currentAttractor = target.value;
+    initSimulation();
 });
-// ---------------------------------------------------------
-// 8. USER INTERFACE
-// ---------------------------------------------------------
-function createUI() {
-    // Create a container for the UI
-    const container = document.createElement('div');
-    container.style.position = 'absolute';
-    container.style.top = '20px';
-    container.style.left = '20px';
-    container.style.fontFamily = 'sans-serif';
-    container.style.color = 'white';
-    container.style.zIndex = '100'; // Ensure it sits on top of canvas
-    document.body.appendChild(container);
-    // Create the Label
-    const label = document.createElement('label');
-    label.innerText = "Select Attractor: ";
-    label.style.marginRight = "10px";
-    container.appendChild(label);
-    // Create the Dropdown
-    const select = document.createElement('select');
-    select.style.padding = "5px";
-    select.style.fontSize = "14px";
-    select.style.backgroundColor = "#333";
-    select.style.color = "white";
-    select.style.border = "1px solid #555";
-    select.style.borderRadius = "4px";
-    select.style.cursor = "pointer";
-    container.appendChild(select);
-    // Populate Options dynamically from your 'attractors' object
-    Object.keys(attractors).forEach(key => {
-        const option = document.createElement('option');
-        option.value = key;
-        // Capitalize first letter for display (e.g., "lorenz" -> "Lorenz")
-        option.text = key.charAt(0).toUpperCase() + key.slice(1);
-        select.appendChild(option);
-    });
-    // Set initial value
-    select.value = currentAttractor;
-    // Handle Change
-    select.addEventListener('change', (e) => {
-        const target = e.target;
-        // Update the global ID
-        currentAttractor = target.value;
-        // Reset the simulation so dots spawn in the correct place for the new attractor
-        initSimulation();
-    });
-}
+initSimulation();
+loop();

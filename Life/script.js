@@ -10,7 +10,7 @@ const ctx = canvas.getContext('2d');
 // ---------------------------------------------------------
 // 2 CONSTANTS
 // ---------------------------------------------------------
-const SCALE = 0.5; // Zoom out to see the structures
+const SCALE = 1; // Zoom out to see the structures
 const PARTICLE_COUNT = 600; // More particles = more fun structures
 const FRICTION = 0.80; // High friction is CRITICAL for Matrix stability
 const FORCE_STRENGTH = 0.1;
