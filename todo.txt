@@ -1,2 +1,4 @@
+> add languages i write in section
+> add tools i use section
 > merge style into index everywhere (maybe tailwind)
 > implement cyberfonk font
