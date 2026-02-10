@@ -5,13 +5,13 @@ const canvas = document.createElement('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 document.body.appendChild(canvas);
-document.body.style.backgroundColor = "#140014";
+document.body.style.backgroundColor = "#111";
 const ctx = canvas.getContext('2d');
 // ---------------------------------------------------------
 // 2 CONSTANTS
 // ---------------------------------------------------------
 const SCALE = 1; // Zoom out to see the structures
-const PARTICLE_COUNT = 600; // More particles = more fun structures
+const PARTICLE_COUNT = 800; // More particles = more fun structures
 const FRICTION = 0.80; // High friction is CRITICAL for Matrix stability
 const FORCE_STRENGTH = 0.1;
 // The Rules: 
@@ -21,13 +21,11 @@ const REPULSION_RANGE = 20; // Particles push away if closer than this
 // ---------------------------------------------------------
 // 3 THE MATRIX
 // ---------------------------------------------------------
-// Classic "Particle Life" settings
-// Try changing these to see completely different "universes"
 const attractions = [
-    [0.4, 0.4, -0.2, -0.2], // Red rules
-    [-0.2, 0.4, 0.4, -0.2], // Cyan rules
-    [-0.2, -0.2, 0.4, 0.4], // Green rules
-    [0.4, -0.2, -0.2, 0.4]
+    [0.4, 0.0, 0.0, 0.0],
+    [0.3, 0.2, 0.3, 0.0],
+    [0.0, 0.3, 0.2, 0.3],
+    [0.0, 0.0, 0.3, 0.2]
 ];
 // ---------------------------------------------------------
 // 5 INITIALIZATION
@@ -46,10 +44,9 @@ function createParticle() {
 }
 const particles = Array.from({ length: PARTICLE_COUNT }, createParticle);
 // ---------------------------------------------------------
-// 6 PHYSICS (Euler + Matrix)
+// 6 PHYSICS
 // ---------------------------------------------------------
 function updatePhysics() {
-    // 1. Calculate Forces (The N^2 Loop)
     for (let i = 0; i < particles.length; i++) {
         const p1 = particles[i];
         let fx = 0;
@@ -71,7 +68,7 @@ function updatePhysics() {
                 dy += canvas.height;
             const distSq = dx * dx + dy * dy;
             if (distSq > 6400)
-                continue; // Optimization: Ignore far away stuff
+                continue;
             const dist = Math.sqrt(distSq);
             const force = attractions[p1.type][p2.type];
             // A. The Matrix Force (Long range)
@@ -92,9 +89,8 @@ function updatePhysics() {
         p1.vx += fx;
         p1.vy += fy;
     }
-    // 2. Move & Friction
+    // 2. Friction
     for (let p of particles) {
-        // Friction prevents the "infinite energy" explosion
         p.vx *= FRICTION;
         p.vy *= FRICTION;
         p.x += p.vx;
@@ -115,7 +111,7 @@ function updatePhysics() {
 // ---------------------------------------------------------
 function loop() {
     // Trail effect (optional, looks cool)
-    ctx.fillStyle = "rgba(20, 0, 20, 0.2)";
+    ctx.fillStyle = "rgba(16, 16, 16, 0.2)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     for (let p of particles) {
         ctx.fillStyle = p.color;
