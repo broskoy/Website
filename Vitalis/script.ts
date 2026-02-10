@@ -13,7 +13,7 @@ const ctx = canvas.getContext('2d')!;
 // ---------------------------------------------------------
 const SCALE = 1; // Zoom out to see the structures
 const PARTICLE_COUNT = 800; // More particles = more fun structures
-const FRICTION = 0.80; // High friction is CRITICAL for Matrix stability
+const FRICTION = 0.9; // High friction is CRITICAL for Matrix stability
 const FORCE_STRENGTH = 0.1;
 
 // The Rules: 
@@ -123,8 +123,8 @@ function updatePhysics() {
 
             // B. The Repulsion Force (Short range safety)
             // Replaces "Collisions" with a soft push
-            if (dist < REPULSION_RANGE && dist > 0) {
-                const f = -2.0 * FORCE_STRENGTH / dist; // Hard push
+            if (0 < dist && dist < REPULSION_RANGE) {
+                const f = -2.0 * FORCE_STRENGTH / dist;
                 fx += f * dx;
                 fy += f * dy;
             }
